@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour {
     public Text txtMaiorPontuacao;
 
     private int pontos;
+    private List<GameObject> obstaculos;
 
     public GameObject prancha;
     public GameObject menuCamera;
@@ -35,6 +36,7 @@ public class GameController : MonoBehaviour {
     }
 
     void Start() {
+        obstaculos = new List<GameObject>();
         estado = Estado.AguardandoComecar;
         PlayerPrefs.SetInt("HighScore", 0);
         menuCamera.SetActive(true);
@@ -47,8 +49,16 @@ public class GameController : MonoBehaviour {
         while (GameController.instancia.estado == Estado.Jogando) {
             Vector3 pos = new Vector3(3f, Random.Range(1f, 2f), -7.7f);
             GameObject obj = Instantiate(obstaculo, pos, Quaternion.identity) as GameObject;
-            Destroy(obj, tempoDestruicao);
+            obstaculos.Add(obj);
+            StartCoroutine(DestruirObstaculo(obj));
             yield return new WaitForSeconds(espera);
+        }
+    }
+
+    IEnumerator DestruirObstaculo(GameObject obj) {
+        yield return new WaitForSeconds(tempoDestruicao);
+        if (obstaculos.Remove(obj)) {
+            Destroy(obj);
         }
     }
 
@@ -80,6 +90,12 @@ public class GameController : MonoBehaviour {
     }
 
     public void PlayerVoltou() {
+        while (obstaculos.Count > 0) {
+            GameObject obj = obstaculos[0];
+            if (obstaculos.Remove(obj)) {
+                Destroy(obj);
+            }
+        }
         estado = Estado.AguardandoComecar;
         menuCamera.SetActive(true);
         menuPanel.SetActive(true);
