@@ -11,6 +11,8 @@ public class GameController : MonoBehaviour {
     public float tempoDestruicao;
 
     public GameObject prancha;
+    public GameObject menuCamera;
+    public GameObject menuPanel;
 
     public static GameController instancia = null;
 
@@ -39,6 +41,8 @@ public class GameController : MonoBehaviour {
 
     public void PlayerComecou() {
         estado = Estado.Jogando;
+        menuCamera.SetActive(false);
+        menuPanel.SetActive(false);
         StartCoroutine(GerarObstaculos());
     }
 
