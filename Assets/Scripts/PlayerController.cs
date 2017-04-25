@@ -11,10 +11,16 @@ public class PlayerController : MonoBehaviour {
     private Animator anim;
     private Rigidbody rb;
     private AudioSource audioSource;
+    private Vector3 posicaoInicial;
+    private Quaternion rotacaoInicial;
+
 
     private bool pulando = false;
 
+
     void Start() {
+        posicaoInicial = transform.localPosition;
+        rotacaoInicial = transform.localRotation;
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
@@ -51,6 +57,15 @@ public class PlayerController : MonoBehaviour {
                 GameController.instancia.PlayerMorreu();
             }
         }
+    }
+
+    public void recomecar() {
+        rb.useGravity = false;
+        rb.velocity = Vector3.zero;
+        rb.detectCollisions = true;
+        transform.localPosition = posicaoInicial;
+        transform.localRotation = rotacaoInicial;
+        anim.Play("aguardando");
     }
 }
 
